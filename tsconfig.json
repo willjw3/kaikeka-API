@@ -1,0 +1,23 @@
+{
+    "$schema": "https://json.schemastore.org/tsconfig",
+    "display": "Node 16",
+
+    "compilerOptions": {
+        "rootDirs": ["src"],
+        "lib": ["ES2020"],
+        "module": "esnext",
+        "moduleResolution": "NodeNext",
+        "target": "ES2020",
+        "sourceMap": true,
+        "outDir": "dist",
+        "esModuleInterop": true,
+        "types": ["node"],
+        "skipLibCheck": true,
+        "allowJs": true
+    },
+    "ts-node": {
+        "esm": true,
+        "experimentalSpecifierResolution": "node"
+    },
+    "include": ["src/**/*"]
+}
