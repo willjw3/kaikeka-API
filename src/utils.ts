@@ -21,10 +21,10 @@ export const createUserTable = async () => {
     }
 }
 
-export const addUser = async (id: number, name: string, email: string, password: string) => {
+export const addUser = async (id: number, email: string, password: string, firstName: string, lastName: string, companyId: string) => {
     const query = {
-        text: 'INSERT INTO users(id, name, email, password) VALUES($1, $2, $3, $4)',
-        values: [id, name, email, password],
+        text: 'INSERT INTO users(id, email, password, first_Name, last_Name, company_id) VALUES($1, $2, $3, $4, $5, $6)',
+        values: [id, email, password, firstName, lastName, companyId],
     }
 
     try {
@@ -43,7 +43,15 @@ export const getUsers = async () => {
     `
     try {
         const res = await client.query(query);
-        return res.rows
+        const schemaFormattedRows = res?.rows ? res.rows.map(row => ({
+            id: row.id,
+            email: row.email,
+            password: row.password,
+            firstName: row.first_name,
+            lastName: row.last_name,
+            companyId: row.company_id
+        })) : {}
+        return schemaFormattedRows
     } catch (err) {
         console.error(err)
     }

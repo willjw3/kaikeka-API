@@ -2,9 +2,11 @@
 # This "Book" type defines the queryable fields for every book in our data source.
 type User {
   id: Int
-  name: String
+  firstName: String
+  lastName: String
   email: String!
   password: String!
+  companyId: String!
   projects: [Project]
 }
 
