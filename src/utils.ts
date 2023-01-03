@@ -1,13 +1,16 @@
+import { v4 as uuidv4 } from 'uuid'
 import {client} from './data/db.js';
 client.connect();
 
 export const createUserTable = async () => {
     const query = `
     CREATE TABLE users (
-        id int primary key,
-        name varchar,
+        id string primary key,
         email varchar,
-        password varchar
+        first_name varchar,
+        last_name varchar,
+        company_id varchar,
+        password varchar,
     );
     `;
 
@@ -21,10 +24,10 @@ export const createUserTable = async () => {
     }
 }
 
-export const addUser = async (id: number, email: string, password: string, firstName: string, lastName: string, companyId: string) => {
+export const addUser = async (id: string, email: string, firstName: string, lastName: string, companyId: string, password: string) => {
     const query = {
-        text: 'INSERT INTO users(id, email, password, first_Name, last_Name, company_id) VALUES($1, $2, $3, $4, $5, $6)',
-        values: [id, email, password, firstName, lastName, companyId],
+        text: 'INSERT INTO users(id, email, first_Name, last_Name, company_id, password) VALUES($1, $2, $3, $4, $5, $6)',
+        values: [id, email, firstName, lastName, companyId, password],
     }
 
     try {
@@ -46,13 +49,29 @@ export const getUsers = async () => {
         const schemaFormattedRows = res?.rows ? res.rows.map(row => ({
             id: row.id,
             email: row.email,
-            password: row.password,
             firstName: row.first_name,
             lastName: row.last_name,
-            companyId: row.company_id
+            companyId: row.company_id,
+            password: row.password
         })) : {}
         return schemaFormattedRows
     } catch (err) {
         console.error(err)
     }
+}
+
+const createRandomUser = () => {
+    const id = uuidv4();
+    const randomString = Math.random().toString(36).slice(2)
+    const firstName = "Test"
+    const lastName = `User + ${randomString}`
+    const email = `${randomString}@vcorp.com`
+    const password = "rstlne"
+    const companyId = "1a234"
+    return {id, email, password, firstName, lastName, companyId}
+}
+
+export const userSeeder = () => {
+    const user = createRandomUser();
+    addUser(user.id, user.email, user.firstName, user.lastName, user.companyId, user.password)
 }
